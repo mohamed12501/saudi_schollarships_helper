@@ -46,10 +46,30 @@ const Home = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.1 }}
-          className="text-lg text-slate-600 max-w-2xl mx-auto"
+          className="text-lg text-slate-600 max-w-2xl mx-auto mb-6"
         >
           Discover thousands of academic programs, scholarships, and opportunities across the Kingdom's top universities.
         </motion.p>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="inline-flex flex-col items-center gap-1 px-4 py-2 bg-slate-100 rounded-2xl border border-slate-200"
+        >
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Official Source</span>
+          <a 
+            href="https://studyinsaudi.sa/ar/Programs" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-xs font-medium text-primary-700 hover:text-primary-800 transition-colors flex items-center gap-1"
+          >
+            Study in Saudi — Ministry of Education
+            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+          </a>
+          <span className="text-[9px] text-slate-400 italic mt-1">
+            * This is an independent helper tool designed to simplify program discovery.
+          </span>
+        </motion.div>
       </div>
 
       {/* Search & Filters */}
