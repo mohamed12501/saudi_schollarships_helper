@@ -58,8 +58,6 @@ const Home = () => {
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
           filters={filters}
-          excludeKeys={excludeKeys}
-          toggleExclude={toggleExclude}
           updateFilter={updateFilter}
           resetFilters={resetFilters}
           filterOptions={filterOptions}

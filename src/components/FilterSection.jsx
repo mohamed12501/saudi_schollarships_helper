@@ -1,48 +1,28 @@
 import React, { useState } from 'react';
-import { Search, Filter, X, RotateCcw, ChevronDown, ChevronUp } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Search, Filter, X, RotateCcw, ChevronDown, ChevronUp, CheckCircle2, XCircle } from 'lucide-react';
 
-const MultiSelect = ({ label, options, selected, onChange, isExclude, onToggleExclude }) => {
+const MultiSelect = ({ label, options, selected, onChange }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const { include = [], exclude = [] } = selected || {};
 
-  const toggleOption = (option) => {
-    const newSelected = selected.includes(option)
-      ? selected.filter(item => item !== option)
-      : [...selected, option];
-    onChange(newSelected);
-  };
+
+
+  // Helper to determine if we should show the summary
+  const totalCount = include.length + exclude.length;
 
   return (
     <div className="space-y-1 relative">
-      <div className="flex items-center justify-between ml-0.5">
-        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-          {label}
-        </label>
-        <button 
-          onClick={(e) => {
-            e.stopPropagation();
-            onToggleExclude();
-          }}
-          className={`text-[9px] font-bold px-1.5 py-0.5 rounded transition-colors ${
-            isExclude 
-              ? 'bg-red-100 text-red-600' 
-              : 'bg-slate-100 text-slate-400 hover:text-slate-600'
-          }`}
-          title={isExclude ? "Excluding selected" : "Including selected"}
-        >
-          {isExclude ? 'EXCLUDE' : 'INCLUDE'}
-        </button>
-      </div>
+      <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-0.5">
+        {label}
+      </label>
       <div 
-        className={`w-full border rounded-lg px-2.5 py-1.5 text-xs cursor-pointer flex justify-between items-center min-h-[34px] transition-all ${
-          isExclude 
-            ? 'bg-red-50/30 border-red-200 hover:bg-red-50/50' 
-            : 'bg-slate-50 border-slate-200 hover:bg-white'
-        }`}
+        className={`w-full border rounded-lg px-2.5 py-1.5 text-xs cursor-pointer flex justify-between items-center min-h-[34px] transition-all bg-slate-50 border-slate-200 hover:bg-white`}
         onClick={() => setIsOpen(!isOpen)}
       >
-        <span className={`truncate pr-4 ${selected.length > 0 ? 'text-slate-900 font-medium' : 'text-slate-400'}`}>
-          {selected.length === 0 ? `Select ${label}` : `${isExclude ? 'Not: ' : ''}${selected.length} selected`}
+        <span className={`truncate pr-4 ${totalCount > 0 ? 'text-slate-900 font-medium' : 'text-slate-400'}`}>
+          {totalCount === 0 
+            ? `All ${label}s` 
+            : `${include.length > 0 ? '+' + include.length : ''} ${exclude.length > 0 ? '-' + exclude.length : ''}`.trim()}
         </span>
         <ChevronDown size={14} className={`text-slate-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </div>
@@ -50,25 +30,38 @@ const MultiSelect = ({ label, options, selected, onChange, isExclude, onToggleEx
       {isOpen && (
         <>
           <div className="fixed inset-0 z-10" onClick={() => setIsOpen(false)}></div>
-          <div className="absolute top-full left-0 w-full mt-1 bg-white border border-slate-200 rounded-xl shadow-xl z-20 max-h-48 overflow-y-auto p-1 animate-in fade-in zoom-in duration-150">
-            {options.length > 0 ? options.map((option) => (
-              <div 
-                key={option}
-                className="flex items-center gap-2 px-2 py-1.5 hover:bg-slate-50 rounded-lg cursor-pointer transition-colors"
-                onClick={() => toggleOption(option)}
-              >
-                <div className={`w-3.5 h-3.5 rounded border flex items-center justify-center transition-colors ${
-                  selected.includes(option) 
-                    ? (isExclude ? 'bg-red-500 border-red-500' : 'bg-primary-600 border-primary-600') 
-                    : 'border-slate-300'
-                }`}>
-                  {selected.includes(option) && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
+          <div className="absolute top-full left-0 w-full mt-1 bg-white border border-slate-200 rounded-xl shadow-xl z-20 max-h-60 overflow-y-auto p-1 animate-in fade-in zoom-in duration-150">
+            {options.length > 0 ? options.map((option) => {
+              const isIncluded = include.includes(option);
+              const isExcluded = exclude.includes(option);
+
+              return (
+                <div 
+                  key={option}
+                  className="flex items-center justify-between gap-2 px-2 py-1.5 hover:bg-slate-50 rounded-lg group transition-colors"
+                >
+                  <span className={`text-[11px] truncate flex-grow ${isIncluded ? 'text-green-600 font-bold' : isExcluded ? 'text-red-600 font-bold' : 'text-slate-600'}`}>
+                    {option}
+                  </span>
+                  <div className="flex items-center gap-1">
+                    <button
+                      onClick={(e) => { e.stopPropagation(); onChange('include', option); }}
+                      className={`p-1 rounded transition-colors ${isIncluded ? 'bg-green-100 text-green-600' : 'text-slate-300 hover:text-green-500 hover:bg-green-50'}`}
+                      title="Include"
+                    >
+                      <CheckCircle2 size={14} />
+                    </button>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); onChange('exclude', option); }}
+                      className={`p-1 rounded transition-colors ${isExcluded ? 'bg-red-100 text-red-600' : 'text-slate-300 hover:text-red-500 hover:bg-red-50'}`}
+                      title="Exclude"
+                    >
+                      <XCircle size={14} />
+                    </button>
+                  </div>
                 </div>
-                <span className={`text-[11px] truncate ${selected.includes(option) ? 'text-slate-900 font-bold' : 'text-slate-600'}`}>
-                  {option}
-                </span>
-              </div>
-            )) : (
+              );
+            }) : (
               <div className="px-3 py-2 text-xs text-slate-400 italic">No options available</div>
             )}
           </div>
@@ -82,8 +75,6 @@ const FilterSection = ({
   searchQuery, 
   setSearchQuery, 
   filters, 
-  excludeKeys,
-  toggleExclude,
   updateFilter, 
   resetFilters, 
   filterOptions 
@@ -109,7 +100,7 @@ const FilterSection = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 font-bold text-slate-800 text-sm sm:text-base">
             <Filter size={16} className="text-primary-600" />
-            <span>Filters</span>
+            <span>Advanced Filters</span>
           </div>
           
           <div className="flex items-center gap-3">
@@ -139,9 +130,7 @@ const FilterSection = ({
                 label={key.replace(/([A-Z])/g, ' $1').trim()}
                 options={options}
                 selected={filters[key]}
-                onChange={(val) => updateFilter(key, val)}
-                isExclude={excludeKeys.has(key)}
-                onToggleExclude={() => toggleExclude(key)}
+                onChange={(type, val) => updateFilter(key, type, val)}
               />
             ))}
           </div>
