@@ -13,7 +13,7 @@ const Layout = ({ children }) => {
                 <GraduationCap size={24} />
               </div>
               <span className="text-xl font-bold bg-gradient-to-r from-primary-700 to-primary-500 bg-clip-text text-transparent">
-                Saudi Scholarships
+                Saudi Scholarships Helper
               </span>
             </Link>
 
@@ -30,10 +30,21 @@ const Layout = ({ children }) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="flex justify-center items-center gap-2 mb-4">
             <GraduationCap className="text-primary-600" size={24} />
-            <span className="text-lg font-bold text-slate-800">Saudi Scholarships</span>
+            <span className="text-lg font-bold text-slate-800">Saudi Scholarships Helper</span>
           </div>
-          <p className="text-slate-500 text-sm">
+          <p className="text-slate-500 text-sm mb-2">
             © {new Date().getFullYear()} Saudi Scholarships Helper.
+          </p>
+          <p className="text-slate-400 text-xs">
+            Data sourced from{' '}
+            <a 
+              href="https://studyinsaudi.sa/ar/Programs" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-primary-600 hover:underline font-medium"
+            >
+              Study in Saudi — Ministry of Education
+            </a>
           </p>
         </div>
       </footer>
